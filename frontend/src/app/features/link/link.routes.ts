@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
+import { HomePageComponent } from './pages/home-page.component';
 
 export const LINK_ROUTES: Routes = [
   {
     path: '',
-    loadComponent: () =>
-      import('./pages/link-home/link-home.component').then(c => c.LinkHomeComponent)
+    component: HomePageComponent
   }
 ];
