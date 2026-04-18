@@ -1,20 +1,20 @@
 package br.com.topaz.desafiotopaz.link;
 
-
 import br.com.topaz.desafiotopaz.link.dto.LinkEncurtadoMapper;
 import br.com.topaz.desafiotopaz.link.dto.LinkEncurtadoRequestDTO;
 import br.com.topaz.desafiotopaz.link.dto.LinkEncurtadoResponseDTO;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import javax.transaction.Transactional;
+import java.util.stream.Collectors;
 
 /**
  * Service responsável pelas regras de negócio do objeto LinkEncurtado.
- * Mantém apenas o fluxo principal do desafio.
  */
 @ApplicationScoped
 public class LinkEncurtadoService {
@@ -31,10 +31,6 @@ public class LinkEncurtadoService {
 
     /**
      * Cria um novo link encurtado.
-     * Se vier alias, usa o alias.
-     * Se não vier alias, gera um código curto automaticamente.
-     *
-     * O método é sincronizado para atender o requisito do desafio.
      *
      * @param requestDTO dados recebidos na requisição
      * @return dados do link encurtado criado
@@ -86,8 +82,81 @@ public class LinkEncurtadoService {
     }
 
     /**
+     * Lista todos os links cadastrados.
+     *
+     * @return lista de links cadastrados
+     */
+    public List<LinkEncurtadoResponseDTO> buscarTodos() {
+        return linkEncurtadoRepository.buscarTodos()
+                .stream()
+                .map(entidade -> linkEncurtadoMapper.paraResponseDTO(
+                        entidade,
+                        montarUrlEncurtada(obterIdentificadorPublico(entidade))
+                ))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Atualiza um link existente.
+     *
+     * @param id identificador do link
+     * @param requestDTO novos dados
+     * @return link atualizado
+     */
+    @Transactional
+    public synchronized LinkEncurtadoResponseDTO atualizar(Long id, LinkEncurtadoRequestDTO requestDTO) {
+        validarUrlOriginal(requestDTO.getUrlOriginal());
+
+        LinkEncurtadoEntity entidade = linkEncurtadoRepository.buscarPorId(id)
+                .orElseThrow(() -> new IllegalArgumentException("Link não encontrado."));
+
+        String aliasAtual = entidade.getAlias();
+        String codigoCurtoAtual = entidade.getCodigoCurto();
+
+        entidade.setUrlOriginal(requestDTO.getUrlOriginal().trim());
+
+        if (aliasFoiInformado(requestDTO.getAlias())) {
+            String novoAlias = requestDTO.getAlias().trim();
+
+            if (!novoAlias.equals(aliasAtual) && linkEncurtadoRepository.existePorAlias(novoAlias)) {
+                throw new IllegalArgumentException("O alias informado já está em uso.");
+            }
+
+            entidade.setAlias(novoAlias);
+            entidade.setCodigoCurto(null);
+        } else {
+            entidade.setAlias(null);
+
+            if (codigoCurtoAtual == null || codigoCurtoAtual.trim().isEmpty()) {
+                entidade.setCodigoCurto(gerarCodigoCurtoUnico());
+            } else {
+                entidade.setCodigoCurto(codigoCurtoAtual);
+            }
+        }
+
+        LinkEncurtadoEntity entidadeAtualizada = linkEncurtadoRepository.atualizar(entidade);
+
+        return linkEncurtadoMapper.paraResponseDTO(
+                entidadeAtualizada,
+                montarUrlEncurtada(obterIdentificadorPublico(entidadeAtualizada))
+        );
+    }
+
+    /**
+     * Exclui um link pelo id.
+     *
+     * @param id identificador do link
+     */
+    @Transactional
+    public void excluirPorId(Long id) {
+        linkEncurtadoRepository.buscarPorId(id)
+                .orElseThrow(() -> new IllegalArgumentException("Link não encontrado."));
+
+        linkEncurtadoRepository.excluirPorId(id);
+    }
+
+    /**
      * Busca a URL original a partir do alias ou código curto.
-     * Esse método será usado no redirecionamento.
      *
      * @param identificadorPublico alias ou código curto
      * @return URL original correspondente
@@ -175,7 +244,6 @@ public class LinkEncurtadoService {
 
     /**
      * Obtém o identificador público do link.
-     * Dá prioridade ao alias. Se não houver alias, usa o código curto.
      *
      * @param entidade registro persistido
      * @return alias ou código curto

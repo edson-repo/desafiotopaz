@@ -20,4 +20,5 @@ COPY target/desafiotopaz.war ${WILDFLY_HOME}/standalone/deployments/
 EXPOSE 8080
 
 # Sobe o WildFly aceitando acesso externo
-CMD ["/opt/wildfly/bin/standalone.sh", "-b", "0.0.0.0"]
+#CMD ["/opt/wildfly/bin/standalone.sh", "-b", "0.0.0.0"]
+CMD ["/opt/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0", "--debug", "8787"]

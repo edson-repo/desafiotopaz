@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 /**
  * DTO responsável por devolver os dados do link encurtado.
  */
@@ -42,7 +40,7 @@ public class LinkEncurtadoResponseDTO {
     private String urlEncurtada;
 
     /**
-     * Data e hora de criação do registro.
+     * Data de criação formatada como texto simples.
      */
-    private LocalDateTime dataCriacao;
+    private String dataCriacao;
 }

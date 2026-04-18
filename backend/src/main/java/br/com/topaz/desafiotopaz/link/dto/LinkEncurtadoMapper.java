@@ -1,15 +1,21 @@
 package br.com.topaz.desafiotopaz.link.dto;
 
-
 import br.com.topaz.desafiotopaz.link.LinkEncurtadoEntity;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Classe responsável por converter DTOs e entidade do objeto LinkEncurtado.
  */
 @ApplicationScoped
 public class LinkEncurtadoMapper {
+
+    /**
+     * Formato simples de data.
+     */
+    private static final String FORMATO_DATA = "dd/MM/yyyy";
 
     /**
      * Converte o DTO de entrada em entidade.
@@ -20,7 +26,14 @@ public class LinkEncurtadoMapper {
     public LinkEncurtadoEntity paraEntidade(LinkEncurtadoRequestDTO requestDTO) {
         LinkEncurtadoEntity entidade = new LinkEncurtadoEntity();
         entidade.setUrlOriginal(requestDTO.getUrlOriginal());
-        entidade.setAlias(requestDTO.getAlias());
+
+        // Evita salvar a string "null"
+        if (requestDTO.getAlias() != null && !requestDTO.getAlias().trim().isEmpty()) {
+            entidade.setAlias(requestDTO.getAlias().trim());
+        } else {
+            entidade.setAlias(null);
+        }
+
         return entidade;
     }
 
@@ -38,7 +51,21 @@ public class LinkEncurtadoMapper {
                 entidade.getAlias(),
                 entidade.getCodigoCurto(),
                 urlEncurtada,
-                entidade.getDataCriacao()
+                formatarData(entidade.getDataCriacao())
         );
+    }
+
+    /**
+     * Formata LocalDateTime para string simples.
+     *
+     * @param data data original
+     * @return data formatada
+     */
+    private String formatarData(LocalDateTime data) {
+        if (data == null) {
+            return null;
+        }
+
+        return data.format(DateTimeFormatter.ofPattern(FORMATO_DATA));
     }
 }

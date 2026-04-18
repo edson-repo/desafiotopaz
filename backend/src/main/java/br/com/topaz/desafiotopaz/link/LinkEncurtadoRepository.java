@@ -31,6 +31,29 @@ public class LinkEncurtadoRepository {
     }
 
     /**
+     * Atualiza um link existente.
+     *
+     * @param entidade entidade com dados atualizados
+     * @return entidade atualizada
+     */
+    public LinkEncurtadoEntity atualizar(LinkEncurtadoEntity entidade) {
+        return entityManager.merge(entidade);
+    }
+
+    /**
+     * Remove um link pelo id.
+     *
+     * @param id identificador do registro
+     */
+    public void excluirPorId(Long id) {
+        LinkEncurtadoEntity entidade = entityManager.find(LinkEncurtadoEntity.class, id);
+
+        if (entidade != null) {
+            entityManager.remove(entidade);
+        }
+    }
+
+    /**
      * Busca um link encurtado pelo id.
      *
      * @param id identificador do registro
@@ -38,6 +61,19 @@ public class LinkEncurtadoRepository {
      */
     public Optional<LinkEncurtadoEntity> buscarPorId(Long id) {
         return Optional.ofNullable(entityManager.find(LinkEncurtadoEntity.class, id));
+    }
+
+    /**
+     * Lista todos os links cadastrados.
+     *
+     * @return lista de links
+     */
+    public List<LinkEncurtadoEntity> buscarTodos() {
+        return entityManager.createQuery(
+                        "SELECT l FROM LinkEncurtadoEntity l ORDER BY l.id DESC",
+                        LinkEncurtadoEntity.class
+                )
+                .getResultList();
     }
 
     /**
