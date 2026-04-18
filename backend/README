@@ -1,0 +1,124 @@
+# Desafio Topaz - URL Shortener
+
+## Visão Geral
+
+Aplicação backend desenvolvida para o desafio técnico, com foco em encurtamento de URLs.
+
+Funcionalidades principais:
+
+* Criar link encurtado com alias personalizado.
+* Criar link encurtado com código automático.
+* Buscar link por ID.
+* Redirecionar para URL original.
+* Validar alias duplicado.
+* Retornar erros padronizados em JSON.
+
+## Tecnologias Utilizadas
+
+* Java 8
+* Maven
+* JAX-RS (REST)
+* CDI
+* JPA / Hibernate
+* WildFly 10
+* Postman (testes)
+
+## Estrutura do Projeto
+
+```text
+backend/
+frontend/
+```
+
+## Backend
+
+API REST publicada em:
+
+```text
+http://localhost:8080/desafiotopaz/api
+```
+
+### Endpoints Disponíveis
+
+#### Criar link encurtado
+
+POST `/api/link/save`
+
+Exemplo:
+
+```json
+{
+  "urlOriginal": "https://www.google.com",
+  "alias": "meulink"
+}
+```
+
+#### Buscar por ID
+
+GET `/api/link/findById/{id}`
+
+#### Redirecionar URL original
+
+GET `/api/link/redireciona/{identificador}`
+
+## Regras Implementadas
+
+* Alias é opcional.
+* Se não informado, o sistema gera código curto automaticamente.
+* Alias não pode ser duplicado.
+* URL original deve iniciar com `http://` ou `https://`.
+* Processamento sincronizado na criação do link.
+
+## Tratamento de Erros
+
+Retorno padrão:
+
+```json
+{
+  "mensagem": "Descrição do erro"
+}
+```
+
+Exemplo:
+
+```json
+{
+  "mensagem": "O alias informado já está em uso."
+}
+```
+
+## Banco de Dados
+
+Configurado via datasource no WildFly:
+
+```text
+java:jboss/datasources/DesafioTopazDS
+```
+
+## Como Executar
+
+1. Subir WildFly 10.
+2. Configurar datasource `DesafioTopazDS`.
+3. Gerar WAR com Maven.
+4. Publicar aplicação no WildFly.
+5. Testar endpoints.
+
+## Testes da API
+
+A collection Postman acompanha o projeto e cobre os principais cenários:
+
+* criação com alias
+* criação sem alias
+* redirecionamento
+* busca por ID
+* alias duplicado
+* ID inexistente
+
+## Frontend
+
+frontend/
+```
+
+## Objetivo Técnico
+
+Entregar solução simples, funcional, organizada e aderente ao escopo solicitado.

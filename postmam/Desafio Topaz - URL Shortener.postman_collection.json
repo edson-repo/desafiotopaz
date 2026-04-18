@@ -1,0 +1,215 @@
+{
+	"info": {
+		"_postman_id": "e9a754e1-6a26-4e9f-9941-e1ac51dcbc92",
+		"name": "Desafio Topaz - URL Shortener",
+		"description": "Collection completa para testar os serviços mínimos do desafio Topaz.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41273562"
+	},
+	"item": [
+		{
+			"name": "01 - Criar Link com Alias",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.collectionVariables.set('idLink', jsonData.id);",
+							"pm.collectionVariables.set('alias', jsonData.alias);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"urlOriginal\": \"{{urlOriginal}}\",\n  \"alias\": \"{{alias}}\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/link/save",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"link",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "02 - Buscar por ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/link/findById/{{idLink}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"link",
+						"findById",
+						"{{idLink}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "03 - Redirecionar por Alias",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/link/redireciona/{{alias}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"link",
+						"redireciona",
+						"{{alias}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "04 - Criar Link sem Alias (gera código curto)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.collectionVariables.set('codigoCurto', jsonData.codigoCurto);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"urlOriginal\": \"https://www.youtube.com\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/link/save",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"link",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "05 - Redirecionar por Código Curto",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/link/redireciona/{{codigoCurto}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"link",
+						"redireciona",
+						"{{codigoCurto}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "06 - Criar Alias Duplicado (teste erro)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"urlOriginal\": \"https://www.microsoft.com\",\n  \"alias\": \"{{alias}}\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/link/save",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"link",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "07 - Buscar ID inexistente",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/link/findById/99999",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"link",
+						"findById",
+						"99999"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080/desafiotopaz/api"
+		},
+		{
+			"key": "idLink",
+			"value": ""
+		},
+		{
+			"key": "alias",
+			"value": "meulink"
+		},
+		{
+			"key": "codigoCurto",
+			"value": ""
+		},
+		{
+			"key": "urlOriginal",
+			"value": "https://www.google.com"
+		}
+	]
+}
