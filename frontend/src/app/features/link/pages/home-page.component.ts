@@ -226,20 +226,11 @@ export class HomePageComponent implements OnInit {
   }
 
   obterUrlResultadoCriacao(): string {
-    return this.montarUrlRedirecionamento(this.resultadoCriacao);
+    return this.resultadoCriacao?.urlEncurtada || '';
   }
 
   obterUrlItemSelecionado(): string {
-    return this.montarUrlRedirecionamento(this.itemSelecionado);
-  }
-
-  private montarUrlRedirecionamento(item?: LinkResponseModel): string {
-    if (!item) {
-      return '';
-    }
-
-    const identificador = item.alias || item.codigoCurto || '';
-    return this.linkApiService.obterUrlRedirecionamento(identificador);
+    return this.itemSelecionado?.urlEncurtada || '';
   }
 
   private copiarLink(url: string): void {
