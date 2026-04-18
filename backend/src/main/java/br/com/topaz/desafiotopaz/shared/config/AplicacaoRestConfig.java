@@ -19,6 +19,7 @@ public class AplicacaoRestConfig extends Application {
         Set<Class<?>> classes = new HashSet<>();
         classes.add(LinkEncurtadoController.class);
         classes.add(GlobalExceptionHandler.class);
+        classes.add(CorsFilter.class);
         return classes;
     }
 }
