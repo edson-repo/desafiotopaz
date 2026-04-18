@@ -1,6 +1,8 @@
 package br.com.topaz.desafiotopaz.link.dto;
 
 
+import br.com.topaz.desafiotopaz.link.LinkEncurtadoEntity;
+
 import javax.enterprise.context.ApplicationScoped;
 
 /**
