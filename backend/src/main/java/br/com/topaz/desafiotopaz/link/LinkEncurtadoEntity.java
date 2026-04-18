@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LinkEncurtadorEntity {
+public class LinkEncurtadoEntity {
 
     /**
      * Identificador interno do registro.
