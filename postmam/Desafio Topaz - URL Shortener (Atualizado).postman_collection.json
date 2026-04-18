@@ -1,0 +1,285 @@
+{
+	"info": {
+		"_postman_id": "1a971488-f954-4651-bb52-0a9ec72bffd9",
+		"name": "Desafio Topaz - URL Shortener (Atualizado)",
+		"description": "Collection atualizada conforme a controller com rotas em português.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41273562"
+	},
+	"item": [
+		{
+			"name": "01 - Salvar Link com Alias",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.collectionVariables.set('idLink', jsonData.id);",
+							"pm.collectionVariables.set('alias', jsonData.alias);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"urlOriginal\": \"{{urlOriginal}}\",\n  \"alias\": \"{{alias}}\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/link/salvar",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"link",
+						"salvar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "02 - Salvar Link sem Alias",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.collectionVariables.set('codigoCurto', jsonData.codigoCurto);",
+							"pm.collectionVariables.set('idLinkSemAlias', jsonData.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"urlOriginal\": \"https://www.youtube.com\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/link/salvar",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"link",
+						"salvar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "03 - Buscar por ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/link/buscarPorId/{{idLink}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"link",
+						"buscarPorId",
+						"{{idLink}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "04 - Buscar Todos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/link/buscarTodos",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"link",
+						"buscarTodos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "05 - Atualizar por ID",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"urlOriginal\": \"https://www.microsoft.com\",\n  \"alias\": \"novoalias\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/link/atualizar/{{idLink}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"link",
+						"atualizar",
+						"{{idLink}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "06 - Excluir por ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/link/excluir/{{idLink}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"link",
+						"excluir",
+						"{{idLink}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "07 - Redirecionar por Alias",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/link/redirecionar/{{alias}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"link",
+						"redirecionar",
+						"{{alias}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "08 - Redirecionar por Código Curto",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/link/redirecionar/{{codigoCurto}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"link",
+						"redirecionar",
+						"{{codigoCurto}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "09 - Alias Duplicado (Erro)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"urlOriginal\": \"https://www.apple.com\",\n  \"alias\": \"{{alias}}\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/link/salvar",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"link",
+						"salvar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "10 - Buscar ID inexistente",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/link/buscarPorId/99999",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"link",
+						"buscarPorId",
+						"99999"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080/desafiotopaz/api"
+		},
+		{
+			"key": "idLink",
+			"value": ""
+		},
+		{
+			"key": "idLinkSemAlias",
+			"value": ""
+		},
+		{
+			"key": "alias",
+			"value": "meulink"
+		},
+		{
+			"key": "codigoCurto",
+			"value": ""
+		},
+		{
+			"key": "urlOriginal",
+			"value": "https://www.google.com"
+		}
+	]
+}
