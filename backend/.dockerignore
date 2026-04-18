@@ -1,0 +1,7 @@
+.idea
+src
+.git
+.gitignore
+mvnw
+mvnw.cmd
+target/*.original
