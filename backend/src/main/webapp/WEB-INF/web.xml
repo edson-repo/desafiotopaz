@@ -15,4 +15,14 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <servlet>
+        <servlet-name>RedirectServlet</servlet-name>
+        <servlet-class>br.com.topaz.desafiotopaz.link.RedirectServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>RedirectServlet</servlet-name>
+        <url-pattern>/r/*</url-pattern>
+    </servlet-mapping>
+
 </web-app>

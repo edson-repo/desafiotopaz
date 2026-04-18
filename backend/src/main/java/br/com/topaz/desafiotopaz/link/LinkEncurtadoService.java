@@ -19,7 +19,8 @@ import java.util.stream.Collectors;
 @ApplicationScoped
 public class LinkEncurtadoService {
 
-    private static final String URL_BASE_ENCURTADA = "http://localhost:8080/desafiotopaz/api/link/r/";
+    //private static final String URL_BASE_ENCURTADA = "http://localhost:8080/desafiotopaz/api/link/r/";
+    private static final String URL_BASE_ENCURTADA = "http://localhost:8080/desafiotopaz/r/";
     private static final String CARACTERES_PERMITIDOS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final int TAMANHO_CODIGO_CURTO = 6;
 

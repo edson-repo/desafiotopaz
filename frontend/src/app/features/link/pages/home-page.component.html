@@ -1,0 +1,188 @@
+<div class="pagina">
+  <div class="conteudo">
+
+    <!-- Cabeçalho -->
+    <div class="cabecalho">
+      <h1>Desafio Topaz</h1>
+      <p>Encurtador de URL</p>
+    </div>
+
+    <div class="grid">
+
+      <!-- Bloco: formulário -->
+      <div class="card">
+        <h2>{{ modoEdicao ? 'Editar Link' : 'Encurtar URL' }}</h2>
+
+        <label for="urlOriginal">URL Original</label>
+        <input
+          id="urlOriginal"
+          type="text"
+          [(ngModel)]="urlOriginal"
+          list="lista-url-original"
+          placeholder="https://www.google.com"
+        />
+        <datalist id="lista-url-original">
+          <option *ngFor="let item of listaUrlOriginal" [value]="item"></option>
+        </datalist>
+
+        <label for="alias">Alias (opcional)</label>
+        <input
+          id="alias"
+          type="text"
+          [(ngModel)]="alias"
+          list="lista-alias"
+          placeholder="meulink"
+        />
+        <datalist id="lista-alias">
+          <option *ngFor="let item of listaAlias" [value]="item"></option>
+        </datalist>
+
+        <button
+          (click)="salvarOuAtualizar()"
+          [disabled]="carregandoFormulario"
+        >
+          {{ carregandoFormulario ? 'Processando...' : (modoEdicao ? 'Atualizar Link' : 'Encurtar URL') }}
+        </button>
+
+        <button
+          *ngIf="modoEdicao"
+          class="botao-secundario"
+          (click)="cancelarEdicao()"
+          [disabled]="carregandoFormulario"
+        >
+          Cancelar Edição
+        </button>
+
+        <div
+          *ngIf="mensagemErroFormulario"
+          class="erro"
+        >
+          {{ mensagemErroFormulario }}
+        </div>
+
+        <!-- Bloco: resultado da criação -->
+        <div
+          *ngIf="resultadoCriacao"
+          class="resultado"
+        >
+          <p><strong>Link gerado:</strong></p>
+
+          <a
+            [href]="obterUrlResultadoCriacao()"
+            target="_blank"
+          >
+            {{ obterUrlResultadoCriacao() }}
+          </a>
+
+          <div class="acoes">
+            <button (click)="copiarLinkResultado()">
+              Copiar
+            </button>
+
+            <button (click)="abrirLinkResultado()">
+              Abrir
+            </button>
+          </div>
+
+          <div class="detalhes">
+            <p><strong>ID:</strong> {{ resultadoCriacao.id }}</p>
+            <p><strong>Alias:</strong> {{ resultadoCriacao.alias || '-' }}</p>
+            <p><strong>Código Curto:</strong> {{ resultadoCriacao.codigoCurto || '-' }}</p>
+            <p><strong>Data Criação:</strong> {{ resultadoCriacao.dataCriacao || '-' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloco: lista e detalhes -->
+      <div class="card">
+        <div class="topo-lista">
+          <h2>Links Cadastrados</h2>
+          <button
+            class="botao-recarregar"
+            (click)="carregarLista()"
+            [disabled]="carregandoLista"
+          >
+            {{ carregandoLista ? 'Carregando...' : 'Recarregar' }}
+          </button>
+        </div>
+
+        <div
+          *ngIf="mensagemErroLista"
+          class="erro"
+        >
+          {{ mensagemErroLista }}
+        </div>
+
+        <div
+          *ngIf="!carregandoLista && listaLinks.length === 0"
+          class="vazio"
+        >
+          Nenhum link cadastrado até o momento.
+        </div>
+
+        <!-- Bloco: lista -->
+        <div class="lista-links">
+          <button
+            type="button"
+            class="item-link"
+            *ngFor="let item of listaLinks"
+            [class.selecionado]="itemSelecionado?.id === item.id"
+            (click)="selecionarItem(item)"
+          >
+            <div class="item-titulo">
+              Alias:
+              {{ item.alias || item.codigoCurto || ('ID ' + item.id) }}
+            </div>
+
+            <div class="item-subtitulo">
+              URL:
+              {{ item.urlOriginal }}
+            </div>
+          </button>
+        </div>
+
+        <!-- Bloco: item selecionado -->
+        <div
+          *ngIf="itemSelecionado"
+          class="resultado"
+        >
+          <p><strong>Item selecionado:</strong></p>
+
+          <a
+            [href]="obterUrlItemSelecionado()"
+            target="_blank"
+          >
+            {{ obterUrlItemSelecionado() }}
+          </a>
+
+          <div class="detalhes">
+            <p><strong>ID:</strong> {{ itemSelecionado.id }}</p>
+            <p><strong>URL Original:</strong> {{ itemSelecionado.urlOriginal }}</p>
+            <p><strong>Alias:</strong> {{ itemSelecionado.alias || '-' }}</p>
+            <p><strong>Código Curto:</strong> {{ itemSelecionado.codigoCurto || '-' }}</p>
+            <p><strong>Data Criação:</strong> {{ itemSelecionado.dataCriacao || '-' }}</p>
+          </div>
+
+          <div class="acoes-lista">
+            <button (click)="editarItemSelecionado()">
+              Editar
+            </button>
+
+            <button (click)="excluirItemSelecionado()" class="botao-excluir">
+              Excluir
+            </button>
+
+            <button (click)="copiarItemSelecionado()">
+              Copiar
+            </button>
+
+            <button (click)="abrirItemSelecionado()">
+              Abrir
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

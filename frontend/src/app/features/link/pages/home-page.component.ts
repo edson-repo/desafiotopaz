@@ -13,428 +13,8 @@ import { LinkResponseModel } from '../models/link-response.model';
   selector: 'app-home-page',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  template: `
-    <div class="pagina">
-      <div class="conteudo">
-
-        <div class="cabecalho">
-          <h1>Desafio Topaz</h1>
-          <p>Encurtador de URL</p>
-        </div>
-
-        <div class="grid">
-
-          <div class="card">
-            <h2>{{ modoEdicao ? 'Editar Link' : 'Encurtar URL' }}</h2>
-
-            <label for="urlOriginal">URL Original</label>
-            <input
-              id="urlOriginal"
-              type="text"
-              [(ngModel)]="urlOriginal"
-              list="lista-url-original"
-              placeholder="https://www.google.com"
-            />
-            <datalist id="lista-url-original">
-              <option *ngFor="let item of listaUrlOriginal" [value]="item"></option>
-            </datalist>
-
-            <label for="alias">Alias (opcional)</label>
-            <input
-              id="alias"
-              type="text"
-              [(ngModel)]="alias"
-              list="lista-alias"
-              placeholder="meulink"
-            />
-            <datalist id="lista-alias">
-              <option *ngFor="let item of listaAlias" [value]="item"></option>
-            </datalist>
-
-            <button
-              (click)="salvarOuAtualizar()"
-              [disabled]="carregandoFormulario"
-            >
-              {{ carregandoFormulario ? 'Processando...' : (modoEdicao ? 'Atualizar Link' : 'Encurtar URL') }}
-            </button>
-
-            <button
-              *ngIf="modoEdicao"
-              class="botao-secundario"
-              (click)="cancelarEdicao()"
-              [disabled]="carregandoFormulario"
-            >
-              Cancelar Edição
-            </button>
-
-            <div
-              *ngIf="mensagemErroFormulario"
-              class="erro"
-            >
-              {{ mensagemErroFormulario }}
-            </div>
-
-            <div
-              *ngIf="resultadoCriacao"
-              class="resultado"
-            >
-              <p><strong>Link gerado:</strong></p>
-
-              <a
-                [href]="obterUrlResultadoCriacao()"
-                target="_blank"
-              >
-                {{ obterUrlResultadoCriacao() }}
-              </a>
-
-              <div class="acoes">
-                <button (click)="copiarLinkResultado()">
-                  Copiar
-                </button>
-
-                <button (click)="abrirLinkResultado()">
-                  Abrir
-                </button>
-              </div>
-
-              <div class="detalhes">
-                <p><strong>ID:</strong> {{ resultadoCriacao.id }}</p>
-                <p><strong>Alias:</strong> {{ resultadoCriacao.alias || '-' }}</p>
-                <p><strong>Código Curto:</strong> {{ resultadoCriacao.codigoCurto || '-' }}</p>
-                <p><strong>Data Criação:</strong> {{ resultadoCriacao.dataCriacao || '-' }}</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="topo-lista">
-              <h2>Links Cadastrados</h2>
-              <button
-                class="botao-recarregar"
-                (click)="carregarLista()"
-                [disabled]="carregandoLista"
-              >
-                {{ carregandoLista ? 'Carregando...' : 'Recarregar' }}
-              </button>
-            </div>
-
-            <div
-              *ngIf="mensagemErroLista"
-              class="erro"
-            >
-              {{ mensagemErroLista }}
-            </div>
-
-            <div
-              *ngIf="!carregandoLista && listaLinks.length === 0"
-              class="vazio"
-            >
-              Nenhum link cadastrado até o momento.
-            </div>
-
-            <div class="lista-links">
-              <button
-                type="button"
-                class="item-link"
-                *ngFor="let item of listaLinks"
-                [class.selecionado]="itemSelecionado?.id === item.id"
-                (click)="selecionarItem(item)"
-              >
-                <div class="item-titulo">
-                  {{ item.alias || item.codigoCurto || ('ID ' + item.id) }}
-                </div>
-
-                <div class="item-subtitulo">
-                  {{ item.urlOriginal }}
-                </div>
-              </button>
-            </div>
-
-            <div
-              *ngIf="itemSelecionado"
-              class="resultado"
-            >
-              <p><strong>Item selecionado:</strong></p>
-
-              <a
-                [href]="obterUrlItemSelecionado()"
-                target="_blank"
-              >
-                {{ obterUrlItemSelecionado() }}
-              </a>
-
-              <div class="detalhes">
-                <p><strong>ID:</strong> {{ itemSelecionado.id }}</p>
-                <p><strong>URL Original:</strong> {{ itemSelecionado.urlOriginal }}</p>
-                <p><strong>Alias:</strong> {{ itemSelecionado.alias || '-' }}</p>
-                <p><strong>Código Curto:</strong> {{ itemSelecionado.codigoCurto || '-' }}</p>
-                <p><strong>Data Criação:</strong> {{ itemSelecionado.dataCriacao || '-' }}</p>
-              </div>
-
-              <div class="acoes-lista">
-                <button (click)="editarItemSelecionado()">
-                  Editar
-                </button>
-
-                <button (click)="excluirItemSelecionado()" class="botao-excluir">
-                  Excluir
-                </button>
-
-                <button (click)="copiarItemSelecionado()">
-                  Copiar
-                </button>
-
-                <button (click)="abrirItemSelecionado()">
-                  Abrir
-                </button>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  `,
-  styles: [`
-    .pagina {
-      min-height: 100vh;
-      background: #f4f6f8;
-      padding: 32px 20px;
-      box-sizing: border-box;
-    }
-
-    .conteudo {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .cabecalho {
-      text-align: center;
-      margin-bottom: 28px;
-    }
-
-    .cabecalho h1 {
-      margin: 0;
-      font-size: 32px;
-      color: #111827;
-    }
-
-    .cabecalho p {
-      margin-top: 8px;
-      color: #6b7280;
-      font-size: 16px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-    }
-
-    .card {
-      background: #ffffff;
-      border-radius: 14px;
-      padding: 24px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
-    }
-
-    .card h2 {
-      margin-top: 0;
-      margin-bottom: 18px;
-      font-size: 22px;
-      color: #111827;
-    }
-
-    label {
-      display: block;
-      margin-top: 14px;
-      margin-bottom: 6px;
-      font-weight: 600;
-      color: #111827;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      font-size: 14px;
-      box-sizing: border-box;
-      background: #ffffff;
-    }
-
-    button {
-      margin-top: 18px;
-      width: 100%;
-      border: none;
-      padding: 12px;
-      border-radius: 8px;
-      background: #2563eb;
-      color: #ffffff;
-      font-weight: 600;
-      cursor: pointer;
-      transition: .2s ease;
-    }
-
-    button:hover {
-      opacity: .95;
-    }
-
-    button:disabled {
-      opacity: .7;
-      cursor: not-allowed;
-    }
-
-    .botao-secundario {
-      background: #6b7280;
-    }
-
-    .botao-excluir {
-      background: #dc2626;
-    }
-
-    .botao-recarregar {
-      width: auto;
-      margin-top: 0;
-      padding: 10px 16px;
-    }
-
-    .erro {
-      margin-top: 16px;
-      padding: 12px;
-      border-radius: 8px;
-      background: #fee2e2;
-      color: #991b1b;
-      font-size: 14px;
-    }
-
-    .resultado {
-      margin-top: 20px;
-      padding: 16px;
-      border-radius: 8px;
-      background: #ecfeff;
-    }
-
-    .resultado a {
-      display: inline-block;
-      margin-top: 6px;
-      color: #2563eb;
-      text-decoration: none;
-      word-break: break-all;
-    }
-
-    .acoes {
-      display: flex;
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .acoes button {
-      margin-top: 0;
-    }
-
-    .acoes-lista {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .acoes-lista button {
-      margin-top: 0;
-    }
-
-    .detalhes {
-      margin-top: 16px;
-      font-size: 14px;
-      color: #374151;
-      word-break: break-word;
-    }
-
-    .detalhes p {
-      margin: 6px 0;
-    }
-
-    .topo-lista {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .topo-lista h2 {
-      margin: 0;
-    }
-
-    .lista-links {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-height: 320px;
-      overflow-y: auto;
-    }
-
-    .item-link {
-      width: 100%;
-      text-align: left;
-      background: #f9fafb;
-      color: #111827;
-      border: 1px solid #e5e7eb;
-      padding: 14px;
-      border-radius: 10px;
-      margin-top: 0;
-    }
-
-    .item-link.selecionado {
-      border-color: #2563eb;
-      background: #eff6ff;
-    }
-
-    .item-titulo {
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .item-subtitulo {
-      font-size: 13px;
-      color: #4b5563;
-      word-break: break-word;
-    }
-
-    .vazio {
-      padding: 16px;
-      border-radius: 8px;
-      background: #f9fafb;
-      color: #6b7280;
-      font-size: 14px;
-    }
-
-    @media (max-width: 900px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .acoes {
-        flex-direction: column;
-      }
-
-      .acoes-lista {
-        grid-template-columns: 1fr;
-      }
-
-      .topo-lista {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .botao-recarregar {
-        width: 100%;
-      }
-    }
-  `]
+  templateUrl: './home-page.component.html',
+  styleUrls: ['./home-page.component.css']
 })
 export class HomePageComponent implements OnInit {
 
@@ -476,7 +56,6 @@ export class HomePageComponent implements OnInit {
   mensagemErroLista = '';
 
   resultadoCriacao?: LinkResponseModel;
-
   listaLinks: LinkResponseModel[] = [];
   itemSelecionado?: LinkResponseModel;
 
@@ -631,28 +210,39 @@ export class HomePageComponent implements OnInit {
   }
 
   copiarLinkResultado(): void {
-    const url = this.obterUrlResultadoCriacao();
-
-    if (!url) {
-      return;
-    }
-
-    navigator.clipboard.writeText(url);
+    this.copiarLink(this.obterUrlResultadoCriacao());
   }
 
   abrirLinkResultado(): void {
-    const url = this.obterUrlResultadoCriacao();
-
-    if (!url) {
-      return;
-    }
-
-    window.open(url, '_blank');
+    this.abrirLink(this.obterUrlResultadoCriacao());
   }
 
   copiarItemSelecionado(): void {
-    const url = this.obterUrlItemSelecionado();
+    this.copiarLink(this.obterUrlItemSelecionado());
+  }
 
+  abrirItemSelecionado(): void {
+    this.abrirLink(this.obterUrlItemSelecionado());
+  }
+
+  obterUrlResultadoCriacao(): string {
+    return this.montarUrlRedirecionamento(this.resultadoCriacao);
+  }
+
+  obterUrlItemSelecionado(): string {
+    return this.montarUrlRedirecionamento(this.itemSelecionado);
+  }
+
+  private montarUrlRedirecionamento(item?: LinkResponseModel): string {
+    if (!item) {
+      return '';
+    }
+
+    const identificador = item.alias || item.codigoCurto || '';
+    return this.linkApiService.obterUrlRedirecionamento(identificador);
+  }
+
+  private copiarLink(url: string): void {
     if (!url) {
       return;
     }
@@ -660,9 +250,7 @@ export class HomePageComponent implements OnInit {
     navigator.clipboard.writeText(url);
   }
 
-  abrirItemSelecionado(): void {
-    const url = this.obterUrlItemSelecionado();
-
+  private abrirLink(url: string): void {
     if (!url) {
       return;
     }
@@ -670,29 +258,7 @@ export class HomePageComponent implements OnInit {
     window.open(url, '_blank');
   }
 
-  obterUrlResultadoCriacao(): string {
-    if (!this.resultadoCriacao) {
-      return '';
-    }
-
-    const identificador =
-      this.resultadoCriacao.alias || this.resultadoCriacao.codigoCurto || '';
-
-    return this.linkApiService.obterUrlRedirecionamento(identificador);
-  }
-
-  obterUrlItemSelecionado(): string {
-    if (!this.itemSelecionado) {
-      return '';
-    }
-
-    const identificador =
-      this.itemSelecionado.alias || this.itemSelecionado.codigoCurto || '';
-
-    return this.linkApiService.obterUrlRedirecionamento(identificador);
-  }
-
-  limparFormulario(): void {
+  private limparFormulario(): void {
     this.urlOriginal = '';
     this.alias = '';
   }

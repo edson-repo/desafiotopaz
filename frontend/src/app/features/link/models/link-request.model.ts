@@ -1,7 +1,8 @@
+
 /**
- * Dados enviados para criar um link encurtado.
+ * Dados enviados para criar ou atualizar um link.
  */
 export interface LinkRequestModel {
   urlOriginal: string;
-  alias?: string;
+  alias?: string | null;
 }

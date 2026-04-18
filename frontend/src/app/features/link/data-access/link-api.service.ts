@@ -6,83 +6,55 @@ import { LinkRequestModel } from '../models/link-request.model';
 import { LinkResponseModel } from '../models/link-response.model';
 
 /**
- * Service responsável pela comunicação com backend.
+ * Service responsável por consumir a API do módulo de links.
  */
 @Injectable({
   providedIn: 'root'
 })
 export class LinkApiService {
-
   private http = inject(HttpClient);
 
-  private readonly apiUrl =
-    'http://localhost:8080/desafiotopaz/api/link';
+  private readonly apiUrl = 'http://localhost:8080/desafiotopaz/api/link';
 
   /**
-   * Cria novo link encurtado.
+   * Salva um novo link.
    */
-  salvar(
-    request: LinkRequestModel
-  ): Observable<LinkResponseModel> {
-
-    return this.http.post<LinkResponseModel>(
-      `${this.apiUrl}/salvar`,
-      request
-    );
+  salvar(payload: LinkRequestModel): Observable<LinkResponseModel> {
+    return this.http.post<LinkResponseModel>(`${this.apiUrl}/salvar`, payload);
   }
 
   /**
-   * Busca link por id.
+   * Busca um link pelo id.
    */
-  buscarPorId(
-    id: number
-  ): Observable<LinkResponseModel> {
-
-    return this.http.get<LinkResponseModel>(
-      `${this.apiUrl}/buscarPorId/${id}`
-    );
+  buscarPorId(id: number): Observable<LinkResponseModel> {
+    return this.http.get<LinkResponseModel>(`${this.apiUrl}/buscarPorId/${id}`);
   }
 
   /**
-   * Lista todos os links cadastrados.
+   * Busca todos os links cadastrados.
    */
   buscarTodos(): Observable<LinkResponseModel[]> {
-    return this.http.get<LinkResponseModel[]>(
-      `${this.apiUrl}/buscarTodos`
-    );
+    return this.http.get<LinkResponseModel[]>(`${this.apiUrl}/buscarTodos`);
   }
 
   /**
    * Atualiza um link existente.
    */
-  atualizar(
-    id: number,
-    request: LinkRequestModel
-  ): Observable<LinkResponseModel> {
-    return this.http.put<LinkResponseModel>(
-      `${this.apiUrl}/atualizar/${id}`,
-      request
-    );
+  atualizar(id: number, payload: LinkRequestModel): Observable<LinkResponseModel> {
+    return this.http.put<LinkResponseModel>(`${this.apiUrl}/atualizar/${id}`, payload);
   }
 
   /**
    * Exclui um link pelo id.
    */
-  excluir(
-    id: number
-  ): Observable<void> {
-    return this.http.delete<void>(
-      `${this.apiUrl}/excluir/${id}`
-    );
+  excluir(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/excluir/${id}`);
   }
 
   /**
-   * Monta URL pública para redirecionamento.
+   * Monta a URL de redirecionamento para alias ou código curto.
    */
-  obterUrlRedirecionamento(
-    identificador: string
-  ): string {
-
+  obterUrlRedirecionamento(identificador: string): string {
     return `${this.apiUrl}/redirecionar/${identificador}`;
   }
 }
