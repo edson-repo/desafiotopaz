@@ -7,7 +7,7 @@
              version="2.1">
 
     <persistence-unit name="desafiotopazPU" transaction-type="JTA">
-        <jta-data-source>java:jboss/datasources/DesafioTopazDS</jta-data-source>
+        <jta-data-source>java:jboss/datasources/ExampleDS</jta-data-source>
 
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>

@@ -1,7 +1,7 @@
 services:
   backend:
     build:
-      context: ./backend
+      context: ./
     container_name: desafiotopaz-api
     ports:
       - "8080:8080"
