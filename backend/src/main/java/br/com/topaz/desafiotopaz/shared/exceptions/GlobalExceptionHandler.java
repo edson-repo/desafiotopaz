@@ -14,29 +14,19 @@ import javax.ws.rs.ext.Provider;
 @Provider
 public class GlobalExceptionHandler implements ExceptionMapper<Exception> {
 
-    /**
-     * Trata exceções lançadas pela aplicação.
-     *
-     * @param exception exceção capturada
-     * @return resposta HTTP padronizada
-     */
     @Override
     public Response toResponse(Exception exception) {
 
         if (exception instanceof IllegalArgumentException) {
-            ErroResponse erroResponse = new ErroResponse(exception.getMessage());
-
             return Response.status(Response.Status.BAD_REQUEST)
                     .type(MediaType.APPLICATION_JSON)
-                    .entity(erroResponse)
+                    .entity(new ErroResponse(exception.getMessage()))
                     .build();
         }
 
-        ErroResponse erroResponse = new ErroResponse("Erro interno no servidor.");
-
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                 .type(MediaType.APPLICATION_JSON)
-                .entity(erroResponse)
+                .entity(new ErroResponse("Erro interno no servidor."))
                 .build();
     }
 }
