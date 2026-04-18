@@ -26,7 +26,7 @@ export class LinkApiService {
   ): Observable<LinkResponseModel> {
 
     return this.http.post<LinkResponseModel>(
-      `${this.apiUrl}/save`,
+      `${this.apiUrl}/salvar`,
       request
     );
   }
@@ -39,7 +39,40 @@ export class LinkApiService {
   ): Observable<LinkResponseModel> {
 
     return this.http.get<LinkResponseModel>(
-      `${this.apiUrl}/findById/${id}`
+      `${this.apiUrl}/buscarPorId/${id}`
+    );
+  }
+
+  /**
+   * Lista todos os links cadastrados.
+   */
+  buscarTodos(): Observable<LinkResponseModel[]> {
+    return this.http.get<LinkResponseModel[]>(
+      `${this.apiUrl}/buscarTodos`
+    );
+  }
+
+  /**
+   * Atualiza um link existente.
+   */
+  atualizar(
+    id: number,
+    request: LinkRequestModel
+  ): Observable<LinkResponseModel> {
+    return this.http.put<LinkResponseModel>(
+      `${this.apiUrl}/atualizar/${id}`,
+      request
+    );
+  }
+
+  /**
+   * Exclui um link pelo id.
+   */
+  excluir(
+    id: number
+  ): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/excluir/${id}`
     );
   }
 
@@ -50,6 +83,6 @@ export class LinkApiService {
     identificador: string
   ): string {
 
-    return `${this.apiUrl}/redireciona/${identificador}`;
+    return `${this.apiUrl}/redirecionar/${identificador}`;
   }
 }
