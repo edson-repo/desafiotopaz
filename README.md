@@ -1,41 +1,26 @@
-# Desafio Topaz
+# Desafio Topaz - URL Shortener
 
 Projeto desenvolvido como solução para o desafio técnico Topaz.
 
-A aplicação permite cadastrar URLs longas e gerar links curtos para redirecionamento, com interface web simples e API REST em Java.
+A proposta foi construir uma aplicação simples, organizada e funcional para encurtamento de URLs, utilizando back-end em Java e front-end em Angular.
 
----
+## Objetivo
 
-## Visão Geral
-
-O sistema recebe uma URL original e gera um identificador curto.
+Permitir que o usuário informe uma URL original e receba uma versão curta para compartilhamento e redirecionamento.
 
 Exemplo:
-
 http://localhost:8080/desafiotopaz/r/google
-
-ou
-
-http://localhost:8080/desafiotopaz/r/abc123
-
-Também possui tela web para gerenciamento dos links cadastrados.
-
----
 
 ## Estrutura do Projeto
 
 desafiotopaz/
-
-- backend/   -> API Java + WildFly
-- frontend/  -> Angular
-- postman/   -> Collection para testes
-
----
+- backend/
+- frontend/
+- postman/
 
 ## Tecnologias Utilizadas
 
-## Backend
-
+### Backend
 - Java 8
 - Maven
 - WildFly 10
@@ -45,169 +30,67 @@ desafiotopaz/
 - Banco H2
 - Docker
 
-## Frontend
-
+### Frontend
 - Angular
 - TypeScript
 - CSS
-- HttpClient
 - Docker
 
----
+### Testes
+- JUnit
+- Mockito
 
 ## Funcionalidades
 
 - Criar URL encurtada
 - Alias personalizado
 - Código curto automático
-- Listar links cadastrados
-- Buscar link por ID
-- Atualizar link
-- Excluir link
-- Copiar link
-- Abrir link
-- Redirecionamento real
+- Buscar por ID
+- Listar todos
+- Atualizar
+- Excluir
+- Redirecionar
+- Frontend integrado
 
----
-
-## Endpoints da API
+## Endpoints
 
 Base:
-
 http://localhost:8080/desafiotopaz/api/link
 
-### Criar link
-
 POST /salvar
-
-### Buscar por ID
-
 GET /buscarPorId/{id}
-
-### Listar todos
-
 GET /buscarTodos
-
-### Atualizar
-
 PUT /atualizar/{id}
-
-### Excluir
-
 DELETE /excluir/{id}
 
-### Redirecionamento público
-
+URL pública:
 GET /r/{aliasOuCodigo}
-
----
 
 ## Como Executar
 
-## Backend local
-
-```bash
+Backend:
 cd backend
 mvn clean package
-```
-
-Gerar WAR e publicar no WildFly.
-
-## Backend Docker
-
-```bash
-cd backend
 docker compose up --build -d
-```
 
-Acesso:
-
-http://localhost:8080/desafiotopaz
-
----
-
-## Frontend local
-
-```bash
+Frontend:
 cd frontend
 npm install
 ng serve -o
-```
 
-Acesso:
+ou
 
-http://localhost:4200
-
----
-
-## Frontend Docker
-
-```bash
-cd frontend
 docker compose up --build -d
-```
 
-Acesso:
+## Testes
 
-http://localhost
+cd backend
+mvn test
 
----
-
-## Organização Técnica
-
-Projeto organizado por domínio.
-
-Exemplo backend:
-
-br.com.topaz.desafiotopaz.link
-
-- Entity
-- Repository
-- Service
-- Controller
-- Mapper
-- DTOs
-
-Fluxo:
+## Organização
 
 Controller -> Service -> Repository
 
----
-
-## Docker
-
-Cada módulo pode subir separado:
-
-- backend container
-- frontend container
-
-Também podem rodar juntos via compose principal.
-
----
-
-## Postman
-
-Existe collection pronta dentro da pasta:
-
-postman/
-
-Com todos endpoints para testes.
-
----
-
-## Melhorias Futuras
-
-- Testes automatizados
-- Swagger/OpenAPI
-- Login de usuários
-- Dashboard analítico
-- Deploy cloud
-- Pipeline CI/CD
-
----
-
 ## Considerações Finais
 
-Projeto desenvolvido buscando simplicidade, organização e clareza.
-
-Atende os requisitos principais do desafio técnico com backend funcional, frontend operacional e estrutura preparada para evolução futura.
+Projeto criado com foco em simplicidade, clareza e entrega funcional.
